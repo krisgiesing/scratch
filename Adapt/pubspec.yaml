@@ -1,0 +1,5 @@
+name: Adapt
+description: A minimal Flutter project.
+dependencies:
+  flutter:
+    path: ../../Flutter/flutter/packages/flutter
