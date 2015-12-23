@@ -9,14 +9,14 @@ abstract class LensSwitcher {
   TransitionComponent switchLenses(Lens from, Lens to, PerformanceView performance);
 }
 
-class Frame extends StatefulComponent {
-  const Frame(this.lens, this.switcher, { Key key }) : super(key: key);
+class Applique extends StatefulComponent {
+  const Applique(this.lens, this.switcher, { Key key }) : super(key: key);
   final Lens lens;
   final LensSwitcher switcher;
-  FrameState createState() => new FrameState();
+  AppliqueState createState() => new AppliqueState();
 }
 
-class FrameState extends State<Frame> {
+class AppliqueState extends State<Applique> {
 
   TransitionComponent _transition = null;
   Performance _performance = null;
@@ -26,7 +26,7 @@ class FrameState extends State<Frame> {
     super.initState();
   }
 
-  void didUpdateConfig(Frame oldConfig) {
+  void didUpdateConfig(Applique oldConfig) {
     if (oldConfig.lens.key != config.lens.key) {
       setState(() {
         switchLenses(oldConfig.lens, config.lens);

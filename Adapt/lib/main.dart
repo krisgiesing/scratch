@@ -46,17 +46,6 @@ class AdaptState extends State<Adapt> with LensSwitcher {
   FlexDirection _direction = FlexDirection.horizontal;
   Key _key = horizontal;
 
-  void _handleSizeChanged(Size newSize) {
-    setState(() {
-      _direction = newSize.width > newSize.height ?
-        FlexDirection.horizontal :
-        FlexDirection.vertical;
-      _key = newSize.width > newSize.height ?
-        horizontal :
-        vertical;
-    });
-  }
-
   Widget _buildContent(BuildContext context) {
     Size size = ui.window.size;
     _direction = size.width > size.height ?
@@ -65,7 +54,7 @@ class AdaptState extends State<Adapt> with LensSwitcher {
     _key = size.width > size.height ?
       horizontal :
       vertical;
-    return new Frame(new FlexLens(_direction, _key), this);
+    return new Applique(new FlexLens(_direction, _key), this);
   }
 
   TransitionComponent switchLenses(Lens from, Lens to, PerformanceView performance) {
@@ -80,11 +69,8 @@ class AdaptState extends State<Adapt> with LensSwitcher {
       toolBar: new ToolBar(
         center: new Text("Flutter Demo")
       ),
-      body: new SizeObserver(
-        child: new Material(
-          child: _buildContent(context)
-        ),
-        onSizeChanged: _handleSizeChanged
+      body: new Material(
+        child: _buildContent(context)
       )
     );
   }
