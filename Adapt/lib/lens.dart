@@ -1,24 +1,55 @@
+import 'dart:collection';
+
 import 'package:flutter/animation.dart';
 import 'package:flutter/widgets.dart';
 
-abstract class Lens extends StatelessComponent {
-  const Lens(Key key) : super(key: key);
+abstract class Lens {
+  dynamic get(String key);
 }
 
-abstract class LensSwitcher {
-  TransitionComponent switchLenses(Lens from, Lens to, PerformanceView performance);
+class LensState extends Lens {
+  LensState(this.name, this.map);
+  final String name;
+  final HashMap<String, dynamic> map;
+  dynamic get(String key) {
+    return map[key];
+  }
 }
+
+class LensTransition extends Lens {
+  LensTransition(this.from, this.to);
+  LensState from;
+  LensState to;
+  HashMap<String, AnimatedValue> animations;
+  dynamic get(String key) {
+    if (animations.containsKey(key)) {
+      return animations[key].value;
+    } else {
+      return to.map[key];
+    }
+  }
+  void update(PerformanceView performance) {
+    animations.values.forEach((AnimatedValue v) {
+      performance.updateVariable(v);
+    });
+  }
+}
+
+typedef Performance LensSwitcher(LensState from, LensState to, LensTransition transition);
+typedef Widget LensedWidgetBuilder(Lens lens, BuildContext context);
 
 class Applique extends StatefulComponent {
-  const Applique(this.lens, this.switcher, { Key key }) : super(key: key);
-  final Lens lens;
+  const Applique(this.lens, this.switcher, this.builder, { Key key })
+    : super(key: key);
+  final LensState lens;
   final LensSwitcher switcher;
+  final LensedWidgetBuilder builder;
   AppliqueState createState() => new AppliqueState();
 }
 
 class AppliqueState extends State<Applique> {
 
-  TransitionComponent _transition = null;
+  LensTransition _transition = null;
   Performance _performance = null;
 
   void initState() {
@@ -27,7 +58,7 @@ class AppliqueState extends State<Applique> {
   }
 
   void didUpdateConfig(Applique oldConfig) {
-    if (oldConfig.lens.key != config.lens.key) {
+    if (oldConfig.lens.name != config.lens.name) {
       setState(() {
         switchLenses(oldConfig.lens, config.lens);
       });
@@ -37,18 +68,20 @@ class AppliqueState extends State<Applique> {
   switchLenses(Lens from, Lens to) {
     if (_performance != null)
       _performance.stop();
-    _performance = new Performance(duration: new Duration(milliseconds: 500));
-    _transition = config.switcher.switchLenses(from, to, _performance);
-    if (_transition != null)
+    _transition = new LensTransition(from, to);
+    _performance = config.switcher(from, to, _transition);
+    if (_performance != null)
       _performance.play();
-    else
+    else {
       _performance = null;
+      _transition = null;
+    }
   }
 
   Widget build(BuildContext context) {
-    if (_transition != null)
-      return _transition;
-    else
-      return config.lens.build(context);
+    Lens lens = _transition == null ?
+      config.lens :
+      (_transition..update(_performance));
+    return config.builder(lens, context);
   }
 }

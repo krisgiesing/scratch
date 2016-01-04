@@ -1,6 +1,7 @@
 import 'dart:ui' as ui;
 
 import 'package:flutter/animation.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/material.dart';
 
 import 'lens.dart';
@@ -16,16 +17,13 @@ void main() {
   );
 }
 
-class Adapt extends StatefulComponent {
-  AdaptState createState() => new AdaptState();
-}
-
-class FlexLens extends Lens {
-  const FlexLens(this.direction, Key key) : super(key);
+class FlexComponent extends StatelessComponent {
+  const FlexComponent({ this.direction, this.color, Key key }) : super(key: key);
   final FlexDirection direction;
+  final Color color;
   Widget build(BuildContext context) {
     return new DecoratedBox(
-      decoration: new BoxDecoration(backgroundColor: const Color(0xFF0000)),
+      decoration: new BoxDecoration(backgroundColor: color),
       child: new Flex(
         <Widget>[
           new Text("Hello"),
@@ -38,30 +36,32 @@ class FlexLens extends Lens {
   }
 }
 
-Key horizontal = new ValueKey('horizontal');
-Key vertical = new ValueKey('vertical');
+LensState horizontal = new LensState('horizontal', {
+  'color': const Color(0xFFFFAABB),
+  'direction': FlexDirection.horizontal
+});
 
-class AdaptState extends State<Adapt> with LensSwitcher {
+LensState vertical = new LensState('vertical', {
+  'color': const Color(0xFFAAFFBB),
+  'direction': FlexDirection.vertical
+});
 
-  FlexDirection _direction = FlexDirection.horizontal;
-  Key _key = horizontal;
+class Adapt extends StatefulComponent {
+  AdaptState createState() => new AdaptState();
+}
 
-  Widget _buildContent(BuildContext context) {
-    Size size = ui.window.size;
-    _direction = size.width > size.height ?
-      FlexDirection.horizontal :
-      FlexDirection.vertical;
-    _key = size.width > size.height ?
-      horizontal :
-      vertical;
-    return new Applique(new FlexLens(_direction, _key), this);
+class AdaptState extends State<Adapt> with BindingObserver {
+
+  AdaptState() {
+    FlutterBinding.instance.addObserver(this);
   }
 
-  TransitionComponent switchLenses(Lens from, Lens to, PerformanceView performance) {
-    final Color begin = (to.key == vertical) ? const Color(0xFFFFAABB) : const Color(0xFFAAFFBB);
-    final Color end = (to.key == vertical) ? const Color(0xFFAAFFBB) : const Color(0xFFFFAABB);
-    final AnimatedColorValue animatedColor = new AnimatedColorValue(begin, end: end, curve: new Linear());
-    return new ColorTransition(color: animatedColor, performance: performance, child: to);
+  LensState _lens = horizontal;
+
+  void didChangeSize(Size size) {
+    setState(() {
+      _lens = size.width > size.height ? horizontal : vertical;
+    });
   }
 
   Widget build(BuildContext context) {
@@ -70,8 +70,21 @@ class AdaptState extends State<Adapt> with LensSwitcher {
         center: new Text("Flutter Demo")
       ),
       body: new Material(
-        child: _buildContent(context)
+        child: new Applique(_lens, this.switchLenses, this.buildWithLens)
       )
     );
+  }
+
+  Performance switchLenses(Lens from, Lens to, LensTransition transition) {
+    if (from != null) {
+      transition.animations["color"] = new AnimatedColorValue(from.get("color"), end: to.get("color"));
+      return new Performance(duration: new Duration(milliseconds: 500));
+    } else {
+      return null;
+    }
+  }
+
+  Widget buildWithLens(Lens lens, BuildContext context) {
+    return new FlexComponent(direction: lens.get("direction"), color: lens.get("color"));
   }
 }
