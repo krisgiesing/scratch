@@ -4,30 +4,77 @@ import 'package:flutter/animation.dart';
 import 'package:flutter/widgets.dart';
 
 abstract class Lens {
-  dynamic get(String key);
+  dynamic operator [](String key);
 }
 
 class LensState extends Lens {
   LensState(this.name, this.map);
   final String name;
   final HashMap<String, dynamic> map;
-  dynamic get(String key) {
+  dynamic operator [](String key) {
     return map[key];
   }
 }
 
+class LensTransitionSpec {
+  const LensTransitionSpec({ this.duration, this.curve, this.animatedProperties });
+  final Duration duration;
+  final Curve curve;
+  final List<String> animatedProperties;
+}
+
+class LensTransitionMap {
+  LensTransitionMap(this.map);
+  final Map<String, Map<String, LensTransitionSpec>> map;
+  LensTransitionSpec specFor(LensState from, LensState to) {
+    Map<String, LensTransitionSpec> dests = map[from?.name];
+    return dests == null ? null : dests[to?.name];
+  }
+}
+
 class LensTransition extends Lens {
-  LensTransition(this.from, this.to);
+  LensTransition(this.from, this.to, this.duration);
+
+  LensTransition.fromSpec(this.from, this.to, LensTransitionSpec spec) {
+    if (spec != null) {
+      this.duration = spec.duration;
+      List<String> properties = spec.animatedProperties;
+      if (properties != null) {
+        for (int i = 0; i < properties.length; i++) {
+          addAnimation(properties[i]);
+        }
+      }
+    }
+  }
+
   LensState from;
   LensState to;
-  HashMap<String, AnimatedValue> animations;
-  dynamic get(String key) {
+  Duration duration;
+  HashMap<String, AnimatedValue> animations = new HashMap<String, AnimatedValue>();
+
+  addAnimation(String property) {
+    dynamic value = to[property];
+    if (value is Color) {
+      animations[property] = new AnimatedColorValue(from[property], end: to[property]);
+    } else if (value is Size) {
+      animations[property] = new AnimatedSizeValue(from[property], end: to[property]);
+    } else if (value is Rect) {
+      animations[property] = new AnimatedRectValue(from[property], end: to[property]);
+    } else if (value is num) {
+      animations[property] = new AnimatedValue<double>(from[property], end: to[property]);
+    } else {
+      throw new ArgumentError("No way to interpolate property named " + property);
+    }
+  }
+
+  dynamic operator [](String key) {
     if (animations.containsKey(key)) {
       return animations[key].value;
     } else {
       return to.map[key];
     }
   }
+
   void update(PerformanceView performance) {
     animations.values.forEach((AnimatedValue v) {
       performance.updateVariable(v);
@@ -35,14 +82,13 @@ class LensTransition extends Lens {
   }
 }
 
-typedef Performance LensSwitcher(LensState from, LensState to, LensTransition transition);
 typedef Widget LensedWidgetBuilder(Lens lens, BuildContext context);
 
 class Applique extends StatefulComponent {
-  const Applique(this.lens, this.switcher, this.builder, { Key key })
+  const Applique(this.lens, this.transitions, this.builder, { Key key })
     : super(key: key);
   final LensState lens;
-  final LensSwitcher switcher;
+  final LensTransitionMap transitions;
   final LensedWidgetBuilder builder;
   AppliqueState createState() => new AppliqueState();
 }
@@ -68,20 +114,25 @@ class AppliqueState extends State<Applique> {
   switchLenses(Lens from, Lens to) {
     if (_performance != null)
       _performance.stop();
-    _transition = new LensTransition(from, to);
-    _performance = config.switcher(from, to, _transition);
-    if (_performance != null)
+    LensTransitionSpec spec = config.transitions.specFor(from, to);
+    if (spec != null) {
+      _transition = new LensTransition.fromSpec(from, to, spec);
+      _performance = new Performance(duration: _transition.duration);
+      _performance.addListener(this.onProgressChanged);
       _performance.play();
-    else {
-      _performance = null;
+    } else {
       _transition = null;
+      _performance = null;
     }
   }
 
+  void onProgressChanged() {
+    setState(() {
+      _transition.update(_performance);
+    });
+  }
+
   Widget build(BuildContext context) {
-    Lens lens = _transition == null ?
-      config.lens :
-      (_transition..update(_performance));
-    return config.builder(lens, context);
+    return config.builder(_transition ?? config.lens, context);
   }
 }

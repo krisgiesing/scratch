@@ -1,7 +1,3 @@
-import 'dart:ui' as ui;
-
-import 'package:flutter/animation.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter/material.dart';
 
 import 'lens.dart';
@@ -17,6 +13,7 @@ void main() {
   );
 }
 
+/// Generated code: Template
 class FlexComponent extends StatelessComponent {
   const FlexComponent({ this.direction, this.color, Key key }) : super(key: key);
   final FlexDirection direction;
@@ -36,6 +33,7 @@ class FlexComponent extends StatelessComponent {
   }
 }
 
+/// Generated code: Lens definitions (styles)
 LensState horizontal = new LensState('horizontal', {
   'color': const Color(0xFFFFAABB),
   'direction': FlexDirection.horizontal
@@ -46,6 +44,28 @@ LensState vertical = new LensState('vertical', {
   'direction': FlexDirection.vertical
 });
 
+LensTransitionSpec swapper = new LensTransitionSpec(
+  duration: const Duration(milliseconds: 500),
+  animatedProperties: [ 'color' ]
+);
+
+LensTransitionMap transitions = new LensTransitionMap({
+  'horizontal' : {
+    'vertical' : swapper
+  },
+  'vertical' : {
+    'horizontal' : swapper
+  }
+});
+
+/// Generated code: Lens application
+/// TODO: This needs other bindings to input and output
+/// Generated code: controller?
+Widget flexComponentFromLens(Lens lens, BuildContext context) {
+  return new FlexComponent(direction: lens["direction"], color: lens["color"]);
+}
+
+/// Application code
 class Adapt extends StatefulComponent {
   AdaptState createState() => new AdaptState();
 }
@@ -53,10 +73,10 @@ class Adapt extends StatefulComponent {
 class AdaptState extends State<Adapt> with BindingObserver {
 
   AdaptState() {
-    FlutterBinding.instance.addObserver(this);
+    WidgetFlutterBinding.instance.addObserver(this);
   }
 
-  LensState _lens = horizontal;
+  LensState _lens = vertical;
 
   void didChangeSize(Size size) {
     setState(() {
@@ -70,21 +90,8 @@ class AdaptState extends State<Adapt> with BindingObserver {
         center: new Text("Flutter Demo")
       ),
       body: new Material(
-        child: new Applique(_lens, this.switchLenses, this.buildWithLens)
+        child: new Applique(_lens, transitions, flexComponentFromLens)
       )
     );
-  }
-
-  Performance switchLenses(Lens from, Lens to, LensTransition transition) {
-    if (from != null) {
-      transition.animations["color"] = new AnimatedColorValue(from.get("color"), end: to.get("color"));
-      return new Performance(duration: new Duration(milliseconds: 500));
-    } else {
-      return null;
-    }
-  }
-
-  Widget buildWithLens(Lens lens, BuildContext context) {
-    return new FlexComponent(direction: lens.get("direction"), color: lens.get("color"));
   }
 }
