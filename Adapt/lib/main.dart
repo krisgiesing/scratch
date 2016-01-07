@@ -1,6 +1,11 @@
+import 'dart:ui' as ui;
+
 import 'package:flutter/material.dart';
 
 import 'lens.dart';
+
+import 'generated/lenses.dart';
+import 'generated/overlays.dart';
 
 void main() {
   runApp(
@@ -11,58 +16,6 @@ void main() {
       }
     )
   );
-}
-
-/// Generated code: Template
-class FlexComponent extends StatelessComponent {
-  const FlexComponent({ this.direction, this.color, Key key }) : super(key: key);
-  final FlexDirection direction;
-  final Color color;
-  Widget build(BuildContext context) {
-    return new DecoratedBox(
-      decoration: new BoxDecoration(backgroundColor: color),
-      child: new Flex(
-        <Widget>[
-          new Text("Hello"),
-          new Text("World")
-        ],
-        direction: direction,
-        justifyContent: FlexJustifyContent.spaceAround
-      )
-    );
-  }
-}
-
-/// Generated code: Lens definitions (styles)
-LensState horizontal = new LensState('horizontal', {
-  'color': const Color(0xFFFFAABB),
-  'direction': FlexDirection.horizontal
-});
-
-LensState vertical = new LensState('vertical', {
-  'color': const Color(0xFFAAFFBB),
-  'direction': FlexDirection.vertical
-});
-
-LensTransitionSpec swapper = new LensTransitionSpec(
-  duration: const Duration(milliseconds: 500),
-  animatedProperties: [ 'color' ]
-);
-
-LensTransitionMap transitions = new LensTransitionMap({
-  'horizontal' : {
-    'vertical' : swapper
-  },
-  'vertical' : {
-    'horizontal' : swapper
-  }
-});
-
-/// Generated code: Lens application
-/// TODO: This needs other bindings to input and output
-/// Generated code: controller?
-Widget flexComponentFromLens(Lens lens, BuildContext context) {
-  return new FlexComponent(direction: lens["direction"], color: lens["color"]);
 }
 
 /// Application code
@@ -77,10 +30,20 @@ class AdaptState extends State<Adapt> with BindingObserver {
   }
 
   LensState _lens = vertical;
+  String _first = ui.window.size.width.toString();
+  String _second = ui.window.size.height.toString();
 
   void didChangeSize(Size size) {
     setState(() {
       _lens = size.width > size.height ? horizontal : vertical;
+      _first = size.width.toString();
+      _second = size.height.toString();
+    });
+  }
+
+  void toggle() {
+    setState(() {
+      _lens = _lens == horizontal ? vertical : horizontal;
     });
   }
 
@@ -90,8 +53,15 @@ class AdaptState extends State<Adapt> with BindingObserver {
         center: new Text("Flutter Demo")
       ),
       body: new Material(
-        child: new Applique(_lens, transitions, flexComponentFromLens)
+        child: new GestureDetector(
+          child: new Applique(_lens, transitions, this.buildWithLens),
+          onTap: this.toggle
+        )
       )
     );
+  }
+
+  Widget buildWithLens(Lens lens, BuildContext context) {
+    return gridComponentOverlay(lens, context, _first, _second);
   }
 }

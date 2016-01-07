@@ -53,15 +53,18 @@ class LensTransition extends Lens {
   HashMap<String, AnimatedValue> animations = new HashMap<String, AnimatedValue>();
 
   addAnimation(String property) {
-    dynamic value = to[property];
-    if (value is Color) {
-      animations[property] = new AnimatedColorValue(from[property], end: to[property]);
-    } else if (value is Size) {
-      animations[property] = new AnimatedSizeValue(from[property], end: to[property]);
-    } else if (value is Rect) {
-      animations[property] = new AnimatedRectValue(from[property], end: to[property]);
-    } else if (value is num) {
-      animations[property] = new AnimatedValue<double>(from[property], end: to[property]);
+    dynamic target = to[property];
+    if (property == "lens:layout") {
+      animations[property] = new AnimatedValue<double>(0.0, end: 1.0);
+    } else if (target is Color) {
+      Color source = from == null ? const Color(0) : from[property];
+      animations[property] = new AnimatedColorValue(source, end: target);
+    } else if (target is Size) {
+      animations[property] = new AnimatedSizeValue(from[property], end: target);
+    } else if (target is Rect) {
+      animations[property] = new AnimatedRectValue(from[property], end: target);
+    } else if (target is num) {
+      animations[property] = new AnimatedValue<double>(from[property], end: target);
     } else {
       throw new ArgumentError("No way to interpolate property named " + property);
     }
