@@ -15,7 +15,7 @@ class FlexComponent extends StatelessComponent {
       decoration: new BoxDecoration(backgroundColor: color),
       child: new LayoutAnimator(
         child: new Flex(
-          <Widget>[
+          children: <Widget>[
             new Text(first),
             new Text(second)
           ],
@@ -40,7 +40,7 @@ class GridComponent extends StatelessComponent {
       decoration: new BoxDecoration(backgroundColor: color),
       child: new LayoutAnimator(
         child: new FixedColumnCountGrid(
-          <Widget>[
+          children: <Widget>[
             new Text(first),
             new Text(second)
           ],
