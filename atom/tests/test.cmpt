@@ -1,0 +1,130 @@
+{
+	"templates": {
+
+		"FlexComponent": {
+			"inputs": {
+				"direction": "FlexDirection",
+				"color": "Color",
+				"first": "String",
+				"second": "String",
+				"progress": "double",
+				"key": "Key"
+			},
+			"contents": {
+				"type": "Group",
+				"background": "${this.color}",
+				"layout": {
+					"strategy": "flex",
+					"flex-direction": "${this.direction}",
+					"flex-justify": "FlexJustify.spaceAround",
+					"animated": true,
+					"progress": "${this.progress}"
+
+				},
+				"children": [
+					{
+						"type": "Text",
+						"contents": "${this.first}"
+					},
+					{
+						"type": "Text",
+						"contents": "${this.second}"
+					}
+				]
+			}
+		},
+
+		"GridComponent": {
+			"inputs": {
+				"columnCount": "Integer",
+				"color": "Color",
+				"first": "String",
+				"second": "String",
+				"progress": "double",
+				"key": "Key"
+			},
+			"contents": {
+				"type": "Group",
+				"background": "${this.color}",
+				"layout": {
+					"strategy": "grid",
+					"grid-columnCount": "${this.columnCount}",
+					"animated": true,
+					"progress": "${this.progress}"
+				},
+				"children": [
+					{
+						"type": "Text",
+						"contents": "${this.first}"
+					},
+					{
+						"type": "Text",
+						"contents": "${this.second}"
+					}
+				]
+			}
+		}
+	},
+
+	"lenses": {
+
+		"states": {
+			"horizontal": {
+				"color": "0xFFFFAABB",
+				"direction": "FlexDirection.horizontal",
+				"columnCount": 2
+			},
+			"vertical": {
+				"color": "0xFFAAFFBB",
+				"direction": "FlexDirection.vertical",
+				"columnCount": 1
+			},
+			"unattached": {
+				"color": "0xFFAABBFF"
+			}
+		},
+
+		"transitions": {
+			"swapper": {
+				"duration": "500ms",
+				"animatedProperties": [ "color", "lens:layout" ]
+			},
+			"opener": {
+				"duration": "3000ms",
+				"animatedProperties": [ "color", "lens:layout" ]
+			}
+		},
+
+		"maps": {
+			"transitions": {
+				"horizontal" : {
+					"vertical" : "swapper"
+				},
+				"vertical" : {
+					"horizontal" : "swapper"
+				},
+				"null" : {
+					"horizontal" : "opener",
+					"vertical" : "opener"
+				}
+			}
+		}
+	},
+
+	"overlays": {
+		"FlexComponent": {
+			"direction": "${lens.direction}",
+			"color": "${lens.color}",
+			"first": "${this.first}",
+			"second": "${this.second",
+			"progress": "${lens.layout}"
+		},
+		"GridComponent": {
+			"columnCount": "${lens.columnCount}",
+			"color": "${lens.color}",
+			"first": "${this.first}",
+			"second": "${this.second",
+			"progress": "${lens.layout}"
+		}
+	}
+}

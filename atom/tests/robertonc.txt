@@ -1,0 +1,59 @@
+Group
+	Group
+		Group
+			_priority: 1.0
+			Icon
+				_behavior: in-app navigation, up
+			Icon
+				_behavior: none
+			Text "Lorem Ipsum"
+		Group
+			Icon
+			Icon
+	Group
+		_behavior: navigation, sibling screens
+
+		Text "Nam ullam"
+		Text "Corper"
+			_state: active
+		Text "Leo tortor"
+Group
+	Image
+		_layer: background
+	Group
+		_layer: overlay
+		_behavior: slides open and closed
+		_state: open
+		Group
+			Text "Sit Dolor"
+			Text "Amet"
+		Group
+			Text
+				"long form text"
+Group
+	Group
+		Text "0:35"
+		Group
+			Icon
+				_layer: overlay
+				_behavior: draggable
+			Img [hairline]
+				_layer: background
+		Text "3:38"
+	Group
+		Icon
+			_behavior: in-app navigation
+		Group
+			Icon
+				_state: inactive
+				_behavior: toggle
+			Group
+				Icon
+				Icon
+				Icon
+			Icon
+				_state: inactive
+				_behavior: toggle
+		Icon
+			_behavior: in-app navigation
+

@@ -1,0 +1,76 @@
+Group
+	aspect: "narrow"
+	Group
+		hint: "header"
+		Group
+			Icon
+				behavior: "tappable"
+			Icon
+			Text
+				length: "medium"
+		Group
+			Icon
+			Icon
+	Group
+		behavior: "single-selectable"
+		hint: "sibling-navigation"
+		Text
+			length: "medium"
+		Text
+			state: "selected"
+			length: "medium"
+		Text
+			length: "medium"
+Group
+	aspect: "square"
+	layering: "layered"
+	Image
+		layer: "background"
+	Group
+		layer: "overlay"
+		behavior: "disclosable"
+		state: "open"
+		Group
+			Text
+				length: "medium"
+			Text
+				length: "medium"
+		Group
+			Text
+				length: "long"
+Group
+	aspect: "narrow"
+	Group
+		Text
+			length: "short"
+		Group
+			hint: "slider"
+			Icon
+				layer: "overlay"
+				behavior: "draggable"
+			Image
+				aspect: "thin"
+				layer: "background"
+		Text
+			length: "short"
+	Group
+		Icon
+			behavior: "tappable"
+		Group
+			Icon
+				behavior: "toggleable"
+				state: "inactive"
+			Group
+				hint: "transport"
+				Icon
+					behavior: "tappable"
+				Icon
+					behavior: "tappable"
+				Icon
+					behavior: "tappable"
+			Icon
+				behavior: "toggleable"
+				state: "inactive"
+		Icon
+			behavior: "tappable"
+

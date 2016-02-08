@@ -1,0 +1,187 @@
+{
+	"children": [
+		{
+			"type": "group",
+			"aspect": "narrow",
+			"children": [
+				{
+					"type": "group",
+					"hint": "header",
+					"children": [
+						{
+							"type": "group",
+							"children": [
+								{
+									"type": "icon",
+									"behavior": "tappable"
+								},
+								{
+									"type": "icon"
+								},
+								{
+									"type": "text",
+									"length": "medium"
+								}
+							]
+						},
+						{
+							"type": "group",
+							"children": [
+								{
+									"type": "icon"
+								},
+								{
+									"type": "icon"
+								}
+							]
+						}
+
+					]
+				},
+				{
+					"type": "group",
+					"hint": "sibling-navigation",
+					"behavior": "single-selectable",
+					"children": [
+						{
+							"type": "text",
+							"length": "medium"
+						},
+						{
+							"type": "text",
+							"state": "selected",
+							"length": "medium"
+						},
+						{
+							"type": "text",
+							"length": "medium"
+						}
+					]
+				}
+			]
+		},
+		{
+			"type": "group",
+			"aspect": "square",
+			"layering": "layered",
+			"children": [
+				{
+					"type": "image",
+					"layer": "background"
+				},
+				{
+					"type": "group",
+					"layer": "overlay",
+					"behavior": "disclosable",
+					"state": "open",
+					"children": [
+						{
+							"type": "group",
+							"children": [
+								{
+									"type": "text",
+									"length": "medium"
+								},
+								{
+									"type": "text",
+									"length": "medium"
+								}
+							]
+						},
+						{
+							"type": "group",
+							"children": [
+								{
+									"type": "text",
+									"length": "long"
+								}
+							]
+						}
+					]
+				}
+			]
+		},
+		{
+			"type": "group",
+			"aspect": "narrow",
+			"children": [
+				{
+					"type": "group",
+					"children": [
+						{
+							"type": "text",
+							"length": "short"
+						},
+						{
+							"type": "group",
+							"hint": "slider",
+							"layering": "layered",
+							"children": [
+								{
+									"type": "icon",
+									"layer": "overlay",
+									"behavior": "draggable"
+								},
+								{
+									"type": "image",
+									"aspect": "thin",
+									"layer": "background"
+								}
+							]
+						},
+						{
+							"type": "text",
+							"length": "short"
+						}
+					]
+				},
+				{
+					"type": "group",
+					"children": [
+						{
+							"type": "icon",
+							"behavior": "tappable"
+						},
+						{
+							"type": "group",
+							"children": [
+								{
+									"type": "icon",
+									"behavior": "toggleable",
+									"state": "inactive"
+								},
+								{
+									"type": "group",
+									"hint": "transport",
+									"children": [
+										{
+											"type": "icon",
+											"behavior": "tappable"
+										},
+										{
+											"type": "icon",
+											"behavior": "tappable"
+										},
+										{
+											"type": "icon",
+											"behavior": "tappable"
+										}
+									]
+								},
+								{
+									"type": "icon",
+									"behavior": "toggleable",
+									"state": "inactive"
+								}
+							]
+						},
+						{
+							"type": "icon",
+							"behavior": "tappable"
+						}
+					]
+				}
+			]
+		}
+	]
+}

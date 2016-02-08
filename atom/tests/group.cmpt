@@ -1,0 +1,13 @@
+{
+	"type": "group",
+	"children": [
+		{
+			"type": "text",
+			"size": "small"
+		},
+		{
+			"type": "text",
+			"size": "small"
+		}
+	]
+}
