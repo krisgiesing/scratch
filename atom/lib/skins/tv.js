@@ -2,7 +2,7 @@ require ('../inheritance.js');
 
 var Skin = require('./skin.js');
 
-TV = function(resolution) {
+var TV = function(resolution) {
 
 }
 

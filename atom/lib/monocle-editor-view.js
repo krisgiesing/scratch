@@ -21,9 +21,11 @@ var ModuleEditorView = function(tab) {
     width: 640,
     height: 960
   });
-  var component = {}; // eventually a top level object...
-  var contents = Inflater.inflate(component, tab.model);
-  skin.frame.inner.append(contents.element);
+  var component = { // eventually a top level object...
+    dir: tab.dir
+  };
+  var element = Inflater.inflate(component, tab.model);
+  skin.frame.inner.append(element.node);
   //skin.frame.outer.css('transform', 'scale(0.5)');
   scroller.append(skin.frame.outer);
   return canvas;

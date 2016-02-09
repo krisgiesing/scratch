@@ -1,0 +1,13 @@
+{
+	"type": "group",
+	"children": [
+		{
+			"type": "component",
+			"content": "icon"
+		},
+		{
+			"type": "component",
+			"content": "group.cmpt"
+		}
+	]
+}

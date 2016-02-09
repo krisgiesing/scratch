@@ -1,12 +1,35 @@
+var fs = require('fs');
+var path = require('path');
+
 require ('../inheritance.js');
 
 var Element = require('./element.js');
+var Inflater = require('./inflater.js');
 
 var Component = function(component, params) {
   Element.call(this, component, params);
 };
 
-Component.hoist = function(property) {
+Component.is(Element);
+
+Component.prototype.create = function(component, params) {
+  if (params.content !== undefined) {
+    var fullpath = path.join(component.dir, params.content);
+    if (path.extname(fullpath) == '')
+      fullpath += '.cmpt';
+    this.name = path.basename(fullpath, '.cmpt');
+    this.dir = path.dirname(fullpath);
+
+    var model = JSON.parse(fs.readFileSync(fullpath));
+    var element = Inflater.inflate(this, model);
+    this.child = element;
+    return element.node;
+  } else {
+    return Element.prototype.create.call(this, component, params);
+  }
+};
+
+Component.prototype.hoist = function(property) {
   if (typeof property === 'string') {
     var match = property.match(/^\${(.*)}$/);
     if (match.length == 2)
@@ -14,7 +37,5 @@ Component.hoist = function(property) {
   }
   return property;
 }
-
-Component.is(Element);
 
 module.exports = Component;

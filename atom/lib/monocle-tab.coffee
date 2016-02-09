@@ -10,6 +10,7 @@ class MonocleTab
   constructor: (uri) ->
     @model = JSON.parse(fs.readFileSync(uri))
     @title = path.basename(uri)
+    @dir = path.dirname(uri)
 
   getTitle:     -> @title
 

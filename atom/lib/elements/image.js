@@ -1,15 +1,15 @@
 require ('../inheritance.js');
 
-var Primitive = require('./primitive.js');
+var Element = require('./element.js');
 
 var Image = function(component, params) {
-  Primitive.call(this, component, params);
+  Element.call(this, component, params);
   if (params.content !== undefined)
-    this.element.css('background-image', component.hoist(params.source));
+    this.node.css('background-image', component.hoist(params.source));
   else
-    this.element.addClass('placeholder-image');
+    this.node.addClass('placeholder-image');
 };
 
-Image.is(Primitive);
+Image.is(Element);
 
 module.exports = Image;
