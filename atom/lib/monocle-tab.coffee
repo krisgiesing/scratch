@@ -4,12 +4,12 @@ fs = require 'fs'
 MonocleView = require './monocle-view'
 MonocleEditor = require './monocle-editor'
 MonocleEditorView = require './monocle-editor-view'
-Parser = require './dsl/parser'
+ADIN = require './adin/parser'
 
 module.exports =
 class MonocleTab
   constructor: (uri) ->
-    @model = Parser.parse(fs.readFileSync(uri, 'utf8'))
+    @model = ADIN.parse(fs.readFileSync(uri, 'utf8'))
     @title = path.basename(uri)
     @dir = path.dirname(uri)
 
