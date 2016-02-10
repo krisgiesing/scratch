@@ -1,10 +1,11 @@
 var fs = require('fs');
 var path = require('path');
 
-require ('../inheritance.js');
+require ('../inheritance');
 
-var Element = require('./element.js');
-var Inflater = require('./inflater.js');
+var Element = require('./element');
+var Inflater = require('./inflater');
+var Parser = require('../dsl/parser');
 
 var Component = function(component, params) {
   Element.call(this, component, params);
@@ -20,7 +21,7 @@ Component.prototype.create = function(component, params) {
     this.name = path.basename(fullpath, '.cmpt');
     this.dir = path.dirname(fullpath);
 
-    var model = JSON.parse(fs.readFileSync(fullpath));
+    var model = Parser.parse(fs.readFileSync(fullpath, 'utf8'));
     var element = Inflater.inflate(this, model);
     this.child = element;
     return element.node;

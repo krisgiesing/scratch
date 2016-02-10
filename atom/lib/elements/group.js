@@ -1,7 +1,7 @@
-require ('../inheritance.js');
+require ('../inheritance');
 
-var Element = require('./element.js');
-var Inflater = require('./inflater.js');
+var Element = require('./element');
+var Inflater = require('./inflater');
 
 var Group = function(component, params) {
   Element.call(this, component, params);

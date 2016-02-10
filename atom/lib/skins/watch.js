@@ -1,6 +1,6 @@
-require ('../inheritance.js');
+require ('../inheritance');
 
-var Skin = require('./skin.js');
+var Skin = require('./skin');
 
 var Watch = function(resolution) {
 

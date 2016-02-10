@@ -3,11 +3,11 @@ module.exports = Inflater;
 
 // Note, defeat circular dependency by requiring after module.exports assignment
 var elements = {};
-elements.component = require('./component.js');
-elements.group = require('./group.js');
-elements.icon = require('./icon.js');
-elements.image = require('./image.js');
-elements.text = require('./text.js');
+elements.component = require('./component');
+elements.group = require('./group');
+elements.icon = require('./icon');
+elements.image = require('./image');
+elements.text = require('./text');
 
 Inflater.inflate = function(component, params) {
   var type = params.type;

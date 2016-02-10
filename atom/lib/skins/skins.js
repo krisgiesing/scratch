@@ -1,10 +1,10 @@
-require ('../inheritance.js');
+require ('../inheritance');
 
 var skins = {};
-skins.watch = require('./watch.js');
-skins.phone = require('./phone.js');
-skins.tablet = require('./tablet.js');
-skins.tv = require('./tv.js');
+skins.watch = require('./watch');
+skins.phone = require('./phone');
+skins.tablet = require('./tablet');
+skins.tv = require('./tv');
 
 var Skins = {};
 

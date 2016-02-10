@@ -1,6 +1,6 @@
 var $ = require('jquery');
 
-require ('../inheritance.js');
+require ('../inheritance');
 
 // Subclasses should create an element member representing the DOM
 // element to be tied into the tree.

@@ -1,6 +1,6 @@
-require ('../inheritance.js');
+require ('../inheritance');
 
-var Element = require('./element.js');
+var Element = require('./element');
 
 var Text = function(component, params) {
   Element.call(this, component, params);

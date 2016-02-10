@@ -2,9 +2,9 @@ var $ = require('jquery');
 var fs = require('fs');
 var path = require('path');
 
-var Skins = require('./skins/skins.js');
-var Phone = require('./skins/phone.js');
-var Inflater = require('./elements/inflater.js');
+var Skins = require('./skins/skins');
+var Phone = require('./skins/phone');
+var Inflater = require('./elements/inflater');
 
 var sData = null;
 var sDataDir = path.dirname(module.filename);

@@ -1,7 +1,7 @@
 var $ = require('jquery');
-require ('../inheritance.js');
+require ('../inheritance');
 
-var Skin = require('./skin.js');
+var Skin = require('./skin');
 
 var Phone = function(resolution) {
   Skin.call(this, resolution);

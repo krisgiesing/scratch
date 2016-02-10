@@ -1,13 +1,10 @@
-{
-	"type": "group",
-	"children": [
-		{
-			"type": "component",
-			"content": "icon"
+group {
+	[
+		component {
+			content: "icon"
 		},
-		{
-			"type": "component",
-			"content": "group.cmpt"
+		component {
+			content: "group.cmpt"
 		}
 	]
 }
